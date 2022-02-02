@@ -4,6 +4,15 @@ Dockerfile with instructions on how to deploy an image to run Armadillo2 simulat
 ## Install docker
 
 ## Donwload Armadillo2 packeges
+The require packeges to deploy the simulation are: 
+1. [armadillo2](https://github.com/bguplp/armadillo).
+2. [robotican demos upgrade](https://github.com/bguplp/robotican_demos_upgrade).
+3. [gazebo worlds](https://github.com/bguplp/gazebo_worlds).
+
+You can clone the reposetories with
+```bash
+git clone <repository>
+```
 
 ## Create a base image
 
