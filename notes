@@ -1,0 +1,19 @@
+pip update: 
+pip3,
+curl -fsSL https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3.5
+pip2, 
+pip install --upgrade "pip < 21.0"
+
+# pip documentation and installation instructions https://pip.pypa.io/en/stable/installation/#get-pip-py.
+
+install catkin_make dep (solves the problem of `Invoking "cmake" failed`):
+
+apt-get install python-catkin-pkg
+
+pip3 install catkin_pkg
+
+
+
+Run armadillo2
+
+roslaunch armadillo2 armadillo2.launch gazebo:=true kinect:=true world_name:="`rospack find armadillo2_gazebo`/worlds/objects_on_table_orel.world" moveit:=true
