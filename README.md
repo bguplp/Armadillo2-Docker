@@ -8,7 +8,7 @@ The require packeges to deploy the simulation are:
 1. [armadillo2](https://github.com/bguplp/armadillo).
 2. [robotican demos upgrade](https://github.com/bguplp/robotican_demos_upgrade).
 3. [gazebo worlds](https://github.com/bguplp/gazebo_worlds).
-
+4. [gazebo_models](https://github.com/robotican/gazebo_models.git) - Those models should download and store at ~/.gazebo/models
 You can clone the reposetories with
 ```bash
 git clone <repository>
