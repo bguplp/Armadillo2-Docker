@@ -20,3 +20,25 @@ roslaunch armadillo2 armadillo2.launch gazebo:=true kinect:=true world_name:="`r
 
 building 37
 roslaunch armadillo2 armadillo2.launch gazebo:=true kinect:=true world_name:="`rospack find armadillo2_gazebo`/worlds/building_37_sim_1.world" moveit:=true x:=-17.08 y:=18.55 z:=2.598
+
+------ INSTALATION ------------ 
+-------------------------------
+---- install nvidia-docker2 ----- 
+you can find the instruction here: 
+https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker
+
+---------direct the cache files directory ---------
+use root previlage to create the file '/etc/docker/daemon.json', then insert the following:
+{
+  "data-root": "/path/to/your/docker"
+}
+while you change the "/path/to/your/docker" to your's desire path :).
+
+then restart the daemon.
+
+--------- restart the daemon -----------
+
+sudo systemctl daemon-reload
+
+ sudo systemctl restart docker
+ 
