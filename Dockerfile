@@ -3,9 +3,11 @@
 # For installation instruction please refer to: https://github.com/bguplp/Armadillo2-Docker/
 
 
-# Installation of nvidia-libglvnd -------- 
+# Installation of nvidia-cudagl -------- 
 #FROM nvidia/cudagl:10.2-base-ubuntu16.04
-FROM nvidia/cudagl:10.1-base-ubuntu16.04
+#FROM nvidia/cudagl:10.1-base-ubuntu16.04
+FROM nvidia/cudagl:11.2.2-base-ubuntu16.04
+
 
 # nvidia-container-runtime
 ENV NVIDIA_VISIBLE_DEVICES \
@@ -13,7 +15,9 @@ ENV NVIDIA_VISIBLE_DEVICES \
 ENV NVIDIA_DRIVER_CAPABILITIES \
     ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}compute,display
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+        mesa-utils \
+        nano \
         git \
         ca-certificates \
         build-essential \
@@ -43,7 +47,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-pip \
         python-pip \
         wget\
+#        && curl -fsSL https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3.5 \
+#        && pip install --upgrade "pip < 21.0" \ 
     && rm -rf /var/lib/apt/lists/* 
+
 RUN rosdep init
 
 # Install Gazebo7
@@ -66,50 +73,38 @@ ARG ROS_GROUP_ID=1000
 RUN addgroup --gid $ROS_GROUP_ID ros \
  && useradd --gid $ROS_GROUP_ID --uid $ROS_USER_ID -ms /bin/bash -p "$(openssl passwd -1 ros)" -G root,sudo ros \
  && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
- && mkdir -p /catkin_ws \
- && ln -s /catkin_ws /home/catkin_ws \
- && chown -R ros:ros /home/ros /catkin_ws
+ && chown -R ros:ros /home/
 
 # Source the ROS configuration.
 RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/ros/.bashrc
 
 # If the script is started from a Catkin workspace,
 # source its configuration as well.
-RUN echo "test -f devel/setup.bash && echo \"Found Catkin workspace.\" && source devel/setup.bash" >> /home/ros/.bashrc
+RUN echo "test -f ~/catkin_ws/devel/setup.bash;{ source ~/catkin_ws/devel/setup.bash ; echo "catkin_ws was found!"; }" >> /home/ros/.bashrc
 
+# Creating WS
+WORKDIR /home/ros/catkin_ws
+RUN mkdir -p src
+
+# ROS dep update
 USER ros
 RUN rosdep update --include-eol-distros
 
-WORKDIR /home/ros/catkin_ws
-
-# Set setting for WS
-# Creating WS
-RUN mkdir -p src
-
+# Update pip & pip3
+RUN curl -fsSL https://bootstrap.pypa.io/pip/2.7/get-pip.py | sudo python \ 
+    && curl -fsSL https://bootstrap.pypa.io/pip/3.5/get-pip.py | sudo python3.5
+    
 # Copy reposetories and models
 COPY . src
 
-#ADD .gazebo /.gazebo
+#copy files  .gazebo /.gazebo
 RUN mkdir -p /home/ros/.gazebo
-RUN cp -a  src/gazebo_worlds/Building_37/models/ /home/ros/.gazebo/
+RUN cp -a src/gazebo_worlds/Building_37/models/ /home/ros/.gazebo/
+RUN cp -a src/gazebo_models/* /home/ros/.gazebo/models/
 
-RUN echo "export HOME=/home/ros \nsource /opt/ros/kinetic/setup.bash\nsource /home/ros/catkin_ws/devel/setup.bash" >> /home/ros/.bashrc
-
-
-# RUN source /root/.bashrc
-
-
-# Install armadillo2, compatible with python3 alongside python2
-# RUN ./catkin_ws/src/armadillo/armadillo2/docker_setup_py2_alongside_py3.sh
-#WORKDIR /home/ubuntu/catkin_ws
-#RUN catkin_make
-#WORKDIR /home/ubuntu/catkin_ws/src/armadillo/armadillo2
-#RUN rosdep update 
-#RUN ["/bin/bash", "-c", "./docker_setup_py2_alongside_py3.sh"]
-# RUN rosdep update
-
-# RUN catkin_make
-
-
+# Change file owner for permissions privilege
+RUN sudo chown -R ros:ros /home/
+# Add packages path to PYTHONPATH
+RUN echo "export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/lib/python3/dist-packages" >> /home/ros/.bashrc
 
 

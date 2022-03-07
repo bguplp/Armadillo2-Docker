@@ -1,4 +1,3 @@
-
 XAUTH=/tmp/.docker.xauth
 if [ ! -f $XAUTH ]
 then
@@ -13,7 +12,7 @@ then
 fi
 
 docker run -it \
-    --env="DISPLAY" \
+    --env="DISPLAY=$DISPLAY" \
     --env="QT_X11_NO_MITSHM=1" \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     --env="XAUTHORITY=$XAUTH" \
@@ -22,15 +21,5 @@ docker run -it \
     --net=host \
     --gpus all \
     --runtime=nvidia \
-    ${1:-armadillo2_10.1} \
+    ${1:-armadillo2} \
     bash
-
-# docker run -it \
-#     --env="DISPLAY" \
-#     --env="QT_X11_NO_MITSHM=1" \
-#     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-#     --env="XAUTHORITY=$XAUTH" \
-#     --volume="$XAUTH:$XAUTH:rw" \
-#     --runtime=nvidia \
-#     $1 \
-#     bash
