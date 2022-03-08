@@ -53,6 +53,7 @@ cd <path>/<to>/docker_src
 cat /usr/local/cuda/version.txt
 ```
 For example,
+
 ![alt text](https://github.com/bguplp/Armadillo2-Docker/blob/main/images/cuda_version.png)
 
 
