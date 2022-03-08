@@ -44,10 +44,18 @@ wget https://github.com/bguplp/Armadillo2-Docker/raw/main/armadillo2_control_gaz
 
 ## Create a base image
 
-Download the `Dockerfile` to `docker_src` folder. Now open a new terminal, cd to `docker_src`
+1. If you didn't download the `Dockerfile` in the previous section download it to `docker_src` folder. Open a new terminal, navigate to `docker_src`
 ```bash
 cd <path>/<to>/docker_src
 ```
+2. Ensure that the host CUDA version and the docker base image are correlated. Verifty the HOST version with, 
+```bash
+cat /usr/local/cuda/version.txt
+```
+For example,
+![alt text](https://github.com/bguplp/Armadillo2-Docker/blob/main/images/cuda_version.png)
+
+
 Then build the image:
 ```bash
 docker build -t armadillo2 . 
