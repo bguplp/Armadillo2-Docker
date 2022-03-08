@@ -3,11 +3,14 @@ Dockerfile, extentions and instructions on how to deploy an image to run Armadil
 
 ## Install docker
 Follow the instructions [here](https://docs.docker.com/engine/install/ubuntu/) (those instruction are for Ubnutu OS).
-It is recommended to manage Docker as a non-root user you can follow [this](https://docs.docker.com/engine/install/linux-postinstall/).
+It is recommended to manage Docker as a non-root user you can follow [this](https://docs.docker.com/engine/install/linux-postinstall/) procedure.
  
+
 ### Prerequisties
 Install nvidia driver and CUDA. If you would like to work with deep learning as well you shuold install cudnn as well (e.g. using YOLO, real-time object detection).
 You may uses [these](https://github.com/TalFeiner/bash_tools) scripts to install nvidia driver, CUDA and cudnn.
+
+To run GPU accelerated containers we need to install the NVIDIA Container ToolKit installation guide can be found [here](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installing-on-ubuntu-and-debian).
 
 ## Donwload Armadillo2 packeges
 The require packeges to deploy the simulation are: 
@@ -56,14 +59,31 @@ For example,
 
 ![alt text](https://github.com/bguplp/Armadillo2-Docker/blob/main/images/cuda_version.png)
 
+We would like to use 11.0.* now let's updates the FROM image by changing line 9 from `FROM nvidia/cudagl:11.2.2-base-ubuntu16.04` to `FROM nvidia/cudagl:11.0.3-base-ubuntu16.04`
 
-Then build the image:
+You may find your specific version [here](https://hub.docker.com/r/nvidia/cudagl/tags).
+3. build the image:
 ```bash
 docker build -t armadillo2 . 
 ```
-`armadillo2` is the image's name, the `-t` flag tags our image. And the `.` at the end, tells that Docker should look for the `Dockerfile` in the current directory.
+`armadillo2` is the image's name, the `-t` flag tags our image. And the `.` at the end, tells that Docker should look for the `Dockerfile` in the current directory. This would take a few minutes. We can verifty is succesed with vscode (through docker extension) or with `docker images`
+
+![alt text](https://github.com/bguplp/Armadillo2-Docker/blob/main/images/images_list.png)
+
+Now we ready for the next step, installation and compilation of armadillo2 simulation.
 
 ## Setup and compile armadillo
+
+Download the script for running a container, this script run a container with the essential arguments.
+```bash 
+wget https://github.com/bguplp/Armadillo2-Docker/raw/main/run_container.bash
+chmod +x run_container.bash 
+```
+If you set the image different name then `armadillo2` you can pass an argument for this script with the image name
+```bash 
+./run_container.bash <image_tag>
+```
+The default `image_tag` is `armadillo2`.
 
 ## Run container with armadillo
 

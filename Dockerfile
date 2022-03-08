@@ -6,7 +6,7 @@
 # Installation of nvidia-cudagl -------- 
 #FROM nvidia/cudagl:10.2-base-ubuntu16.04
 #FROM nvidia/cudagl:10.1-base-ubuntu16.04
-FROM nvidia/cudagl:11.2.2-base-ubuntu16.04
+FROM nvidia/cudagl:11.0.3-base-ubuntu16.04
 
 
 # nvidia-container-runtime
@@ -80,7 +80,7 @@ RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/ros/.bashrc
 
 # If the script is started from a Catkin workspace,
 # source its configuration as well.
-RUN echo "test -f ~/catkin_ws/devel/setup.bash;{ source ~/catkin_ws/devel/setup.bash ; echo "catkin_ws was found!"; }" >> /home/ros/.bashrc
+RUN echo "test -f ~/catkin_ws/devel/setup.bash && { source ~/catkin_ws/devel/setup.bash ; echo "catkin_ws was found!"; }" >> /home/ros/.bashrc
 
 # Creating WS
 WORKDIR /home/ros/catkin_ws
@@ -92,7 +92,8 @@ RUN rosdep update --include-eol-distros
 
 # Update pip & pip3
 RUN curl -fsSL https://bootstrap.pypa.io/pip/2.7/get-pip.py | sudo python \ 
-    && curl -fsSL https://bootstrap.pypa.io/pip/3.5/get-pip.py | sudo python3.5
+    && curl -fsSL https://bootstrap.pypa.io/pip/3.5/get-pip.py | sudo python3.5 \
+    && sudo sed -i 's/python3.5/python/g' /usr/local/bin/pip
     
 # Copy reposetories and models
 COPY . src
@@ -106,5 +107,3 @@ RUN cp -a src/gazebo_models/* /home/ros/.gazebo/models/
 RUN sudo chown -R ros:ros /home/
 # Add packages path to PYTHONPATH
 RUN echo "export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/lib/python3/dist-packages" >> /home/ros/.bashrc
-
-
