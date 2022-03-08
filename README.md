@@ -1,7 +1,13 @@
 # Armadillo2-Docker
-Dockerfile with instructions on how to deploy an image to run Armadillo2 simulation via docker
+Dockerfile, extentions and instructions on how to deploy an image to run Armadillo2 simulation via docker.
 
 ## Install docker
+Follow the instructions [here](https://docs.docker.com/engine/install/ubuntu/) (those instruction are for Ubnutu OS).
+It is recommended to manage Docker as a non-root user you can follow [this](https://docs.docker.com/engine/install/linux-postinstall/).
+ 
+### Prerequisties
+Install nvidia driver and CUDA. If you would like to work with deep learning as well you shuold install cudnn as well (e.g. using YOLO, real-time object detection).
+You may uses [these](https://github.com/TalFeiner/bash_tools) scripts to install nvidia driver, CUDA and cudnn.
 
 ## Donwload Armadillo2 packeges
 The require packeges to deploy the simulation are: 
@@ -9,11 +15,32 @@ The require packeges to deploy the simulation are:
 2. [robotican demos upgrade](https://github.com/bguplp/robotican_demos_upgrade).
 3. [gazebo worlds](https://github.com/bguplp/gazebo_worlds).
 4. [gazebo_models](https://github.com/robotican/gazebo_models.git).
+
+**Note** that repositories 1,2 are private, in order to use `git clone` command you need to connect through an ssh connection. 
+
 You can clone the repositories with
 ```bash
 git clone <repository>
 ```
-Gather those repositories in one new folder (let's called it `docker_src`).
+Gather those repositories in one new folder (let's called it `docker_src`). For example,
+```bash
+cd ~/
+mkdir -p armadillo2_ws/docker_src
+cd armadillo2_ws/docker_src
+# This clone is made through an ssh connection.
+git clone git@github.com:bguplp/robotican_demos_upgrade.git
+```
+
+After you download all the packges, download the Dockerfile,
+```bash
+cd ~/armadillo2_ws/docker_src 
+# If needed change the path to your's repositories directory.
+wget https://github.com/bguplp/Armadillo2-Docker/raw/main/Dockerfile
+```
+Now there is a change we should do inside armadillo PID gains,
+```bash
+wget https://github.com/bguplp/Armadillo2-Docker/raw/main/armadillo2_control_gazebo.yaml && mv armadillo2_control_gazebo.yaml armadillo/armadillo2_control/config/
+```
 
 ## Create a base image
 
