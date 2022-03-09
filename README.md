@@ -104,4 +104,4 @@ The `image_name` is your own preference if you like to rewrite the image use the
 ## Host container communication
 
 ## Trobleshooting
-There is a lot, for now just do google search.
+There is a few, I didn't managed to documents a lot so you may try google search or contact me via email [orelhamamy@gamil.com](mailto:orelhamamy@gamil.com [github]%20Armadillo2%20Docker)
