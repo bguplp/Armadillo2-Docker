@@ -17,8 +17,8 @@ The require packeges to deploy the simulation are:
 1. [armadillo2](https://github.com/bguplp/armadillo).
 2. [robotican demos upgrade](https://github.com/bguplp/robotican_demos_upgrade).
 3. [gazebo worlds](https://github.com/bguplp/gazebo_worlds).
-4. [gazebo_models](https://github.com/robotican/gazebo_models.git).
-
+4. [gazebo models](https://github.com/robotican/gazebo_models.git).
+5. [armadillo navigation upgrade](https://github.com/bguplp/armadillo_navigation_upgrade)
 **Note** that repositories 1,2 are private, in order to use `git clone` command you need to connect through an ssh connection. 
 
 You can clone the repositories with
@@ -79,13 +79,73 @@ Download the script for running a container, this script run a container with th
 wget https://github.com/bguplp/Armadillo2-Docker/raw/main/run_container.bash
 chmod +x run_container.bash 
 ```
-If you set the image different name then `armadillo2` you can pass an argument for this script with the image name
+If you set the image different name then `armadillo2` you can pass an argument for this script with the image name,
 ```bash 
-./run_container.bash <image_tag>
+sudo ./run_container.bash <image_tag>
 ```
 The default `image_tag` is `armadillo2`.
 
+Navigate to armadillo2 folder,
+```bash 
+cd src/armadillo/armadillo2
+```
+The absolute path is `/home/ros/catkin_ws/src/armadillo/armadillo2`. Run the setup file,
+```bash 
+./docker_setup_py2_alongside_py3.sh
+```
+This would take some time...
+
+After the setup is done, we commiting to the image **This execute within a host terminal**,
+```bash
+docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
+```
+To find out your CONTAINER ID, run `docker ps`. Either use autocomplete (Tab key) to use the container name. The repository may be again armadillo2. Example for a commit command,
+```bash
+docker commit xenodochial_varahamihira armadillo2
+```
+
+Now let's setup our environment by source `.bashrc`,
+```bash
+source ~/.bashrc
+```
+
+
 ## Run container with armadillo
+
+After you build the image, setup armadillo2 within the container and commit, you able to run a container. Now we will demonstrate how to runs a container, inside the container we will implement simulation, launch a file and excute pick operation. 
+
+1. Run a container,
+```bash 
+sudo ./run_container.bash <image_tag>
+```
+2. Start armadillo2 simulation,
+```
+roslaunch armadillo2 armadillo2.launch gazebo:=true kinect:=true world_name:="`rospack find armadillo2_gazebo`/worlds/building_37_sim_1.world" moveit:=true x:=-17.08 y:=18.55 z:=2.598
+```
+3. Open new terminal within the container with,
+```bash
+docker exec -it <container_name> bash
+```
+This step will redo every time when we need a new terminal.
+
+4. (recommend) Inside the container running a `rqt`, to navigates and monitoring the robot.
+
+5. Launch the script for pickup,
+```bash
+roslaunch robotican_demos_upgrade sim_launch.launch 
+```
+Notice, I changed this script to work with color detection and not YOLO.
+
+6. Navigate the robot in front of the can using the `rqt`.
+
+7. Call the pick service.
+```bash 
+rosservice call /pick_unknown "robot: ''
+obj: ''
+discrete_location: ''" 
+```
+The final result,
+![alt text](https://github.com/bguplp/Armadillo2-Docker/blob/main/images/pickup-based-color.png)
 
 ### Update the current container
 If you done some changes inside the container, and you would like to updates the image you can run
@@ -103,5 +163,47 @@ docker container ls
 The `image_name` is your own preference if you like to rewrite the image use the same name, you can also add tag by `<image_name>:<tag>`.
 ## Host container communication
 
+While I used ROS noetic within the host machine it work fine, I manage to run simulation in a container, YOLO-4 on the host machine and pick-up services and launch inside the container, so I can say it can comunicate and transfer data, without additional configuration.
+
 ## Trobleshooting
-There is a few, I didn't managed to documents a lot so you may try google search or contact me via email [orelhamamy@gamil.com](mailto:orelhamamy@gamil.com?subject=[github]%20Armadillo2%20Docker)
+There is a few, I didn't managed to documents a lot so you may try google search or contact me via email [orelhamamy@gamil.com](mailto:orelhamamy@gamil.com?subject=[github]%20Armadillo2%20Docker).
+### Low Disk Space on "Filesystem root"
+
+The docker storges data in `/var/lib/docker/` directory, which may cause consuming of a lot of space. There are two possibale solutions,
+ 1. Delete previous data like old containers and etc. 
+```bash
+docker system prune 
+```
+**NOTICE** You may add -a flag, be aware this command can delete your images as well.
+
+ 2. Change to docker data directory from `/root` to `/home`. For more detail see this [link](https://www.ibm.com/docs/en/z-logdata-analytics/5.1.0?topic=compose-relocating-docker-root-directory).
+	2.1 Stop the Docker service,
+```bash
+sudo systemctl stop docker
+sudo systemctl stop docker.socket
+sudo systemctl stop containerd
+```
+	2.2 Create new dir for the docker,
+```bash
+sudo mkdir -p /new_dir_structure
+```
+	2.3 Move Docker root to the new dir,
+```bash
+sudo mv /var/lib/docker /new_dir_structure
+```
+	2.4 Edit (with root privilege) the file `/etc/docker/daemon.json`. If you installed Nvidia-Docker 2.0 the file should be existed, edit it as follow,
+```JSON
+{
+    "runtimes": {
+        "nvidia": {
+            "path": "nvidia-container-runtime",
+            "runtimeArgs": []
+        }
+    },
+    "data-root": "/<path>/<to>/<your>/<directory>"
+}
+```
+	2.5 Restart the Docker services, 
+```bash
+sudo systemctl start docker
+```

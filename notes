@@ -42,3 +42,9 @@ sudo systemctl daemon-reload
 
  sudo systemctl restart docker
  
+ 
+ ----- Docker with pip&pip3 without PYTHONPATH --- 
+ 
+ pip3 install catkin_pkg
+ 
+ 
