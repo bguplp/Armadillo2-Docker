@@ -19,6 +19,7 @@ The require packeges to deploy the simulation are:
 3. [gazebo worlds](https://github.com/bguplp/gazebo_worlds).
 4. [gazebo models](https://github.com/robotican/gazebo_models.git).
 5. [armadillo navigation upgrade](https://github.com/bguplp/armadillo_navigation_upgrade)
+
 **Note** that repositories 1,2 are private, in order to use `git clone` command you need to connect through an ssh connection. 
 
 You can clone the repositories with
@@ -33,7 +34,6 @@ cd armadillo2_ws/docker_src
 # This clone is made through an ssh connection.
 git clone git@github.com:bguplp/robotican_demos_upgrade.git
 ```
-
 After you download all the packges, download the Dockerfile,
 ```bash
 cd ~/armadillo2_ws/docker_src 
@@ -44,7 +44,6 @@ Now there is a change we should do inside armadillo PID gains,
 ```bash
 wget https://github.com/bguplp/Armadillo2-Docker/raw/main/armadillo2_control_gazebo.yaml && mv armadillo2_control_gazebo.yaml armadillo/armadillo2_control/config/
 ```
-
 ## Create a base image
 
 1. If you didn't download the `Dockerfile` in the previous section download it to `docker_src` folder. Open a new terminal, navigate to `docker_src`
@@ -108,7 +107,6 @@ Now let's setup our environment by source `.bashrc`,
 ```bash
 source ~/.bashrc
 ```
-
 
 ## Run container with armadillo
 
