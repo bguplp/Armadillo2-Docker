@@ -15,40 +15,26 @@ ENV NVIDIA_VISIBLE_DEVICES \
 ENV NVIDIA_DRIVER_CAPABILITIES \
     ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}compute,display
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-        mesa-utils \
-        nano \
-        git \
-        ca-certificates \
-        build-essential \
-        g++ \
-        libxinerama-dev \
-        libxext-dev \
-        libxrandr-dev \
-        libxi-dev \
-        libxcursor-dev \
-        libxxf86vm-dev \
-        libvulkan-dev && \
-    rm -rf /var/lib/apt/lists/*
 
-# ROS kinect installation ------- 
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+    mesa-utils \
+    vim nano\
+    build-essential gdb \
+    cmake cmake-curses-gui \
+    git \
+    ssh \
+ && rm -rf /var/lib/apt/lists/*
+
+# -------- ROS kinetic installation ------- 
 # Register the ROS package sources.
 
 ENV UBUNTU_RELEASE=xenial
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $UBUNTU_RELEASE main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
-# install ros packages and ca-certificates for enable using wget
+# Install ros
 RUN apt-get update && apt-get install -y \
         ros-kinetic-desktop-full \ 
-    && rm -rf /var/lib/apt/lists/* 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        ca-certificates \
-        python3-pip \
-        python-pip \
-        wget\
-#        && curl -fsSL https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3.5 \
-#        && pip install --upgrade "pip < 21.0" \ 
     && rm -rf /var/lib/apt/lists/* 
 
 RUN rosdep init
@@ -58,7 +44,6 @@ RUN sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable
                `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list' \
                && wget --no-check-certificate https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add - 
 RUN apt-get update && apt-get install -y gazebo7 \
-#    libgazebo7-dev \
     ros-kinetic-gazebo-ros-pkgs \
     ros-kinetic-gazebo-ros-control\
     && rm -rf /var/lib/apt/lists/*
@@ -90,10 +75,9 @@ RUN mkdir -p src
 USER ros
 RUN rosdep update --include-eol-distros
 
-# Update pip & pip3
-RUN curl -fsSL https://bootstrap.pypa.io/pip/2.7/get-pip.py | sudo python \ 
-    && curl -fsSL https://bootstrap.pypa.io/pip/3.5/get-pip.py | sudo python3.5 \
-    && sudo sed -i 's/python3.5/python/g' /usr/local/bin/pip
+# Install pip & pip3
+RUN curl -fsSL https://bootstrap.pypa.io/pip/3.5/get-pip.py | sudo python3.5 \
+    && curl -fsSL https://bootstrap.pypa.io/pip/2.7/get-pip.py | sudo python
     
 # Copy reposetories and models
 COPY . src
@@ -105,5 +89,4 @@ RUN cp -a src/gazebo_models/* /home/ros/.gazebo/models/
 
 # Change file owner for permissions privilege
 RUN sudo chown -R ros:ros /home/
-# Add packages path to PYTHONPATH
-RUN echo "export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/lib/python3/dist-packages" >> /home/ros/.bashrc
+
