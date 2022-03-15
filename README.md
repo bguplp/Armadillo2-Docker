@@ -67,7 +67,7 @@ docker build -t armadillo2 .
 ```
 `armadillo2` is the image's name, the `-t` flag tags our image. And the `.` at the end, tells that Docker should look for the `Dockerfile` in the current directory. This would take a few minutes. We can verify it succeed with vscode (through docker extension) or with `docker images` command,
 
-![alt text](https://github.com/bguplp/Armadillo2-Docker/blob/main/images/images_list.png)
+![alt text](https://github.com/bguplp/Armadillo2-Docker/blob/main/images/images_list2.png)
 
 Now we are ready for the next step, installation and compilation of armadillo2 simulation.
 
