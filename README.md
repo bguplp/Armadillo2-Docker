@@ -180,11 +180,11 @@ docker system prune
 
    2.1. Stop the Docker service,
         
-        ```bash
-        sudo systemctl stop docker
-        sudo systemctl stop docker.socket
-        sudo systemctl stop containerd
-        ```
+	```bash
+	sudo systemctl stop docker
+	sudo systemctl stop docker.socket
+	sudo systemctl stop containerd
+	```
 	
    2.2. Create new dir for the docker,
         ```bash
