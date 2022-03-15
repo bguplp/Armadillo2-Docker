@@ -186,17 +186,17 @@ docker system prune
 	```
 	
    2.2. Create new dir for the docker,
-        ```bash
-        sudo mkdir -p /new_dir_structure
-        ```
+	```bash
+	sudo mkdir -p /new_dir_structure
+	```
 	
    2.3. Move Docker root to the new dir,
-        ```bash
-        sudo mv /var/lib/docker /new_dir_structure
-        ```
+	```bash
+	sudo mv /var/lib/docker /new_dir_structure
+	```
 	
    2.4. Edit (with root privilege) the file `/etc/docker/daemon.json`. If you installed Nvidia-Docker 2.0 the file should be existed, edit it as follow,
-        ```JSON
+	```JSON
 	{
 	    "runtimes": {
 		"nvidia": {
@@ -206,9 +206,9 @@ docker system prune
 	    },
 	    "data-root": "/<path>/<to>/<your>/<directory>"
 	}
-        ```
+	```
 	
    2.5. Restart the Docker services, 
-        ```bash
-        sudo systemctl start docker
-        ```
+	```bash
+	sudo systemctl start docker
+	```
