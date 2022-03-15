@@ -185,7 +185,7 @@ sudo systemctl stop docker.socket
 sudo systemctl stop containerd
 ```
 	
-	2.2 Create new dir for the docker,
+2.2 Create new dir for the docker,
 ```bash
 sudo mkdir -p /new_dir_structure
 ```
