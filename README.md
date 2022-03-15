@@ -1,5 +1,5 @@
 # Armadillo2-Docker
-Dockerfile, extentions and instructions on how to deploy an image to run Armadillo2 simulation via docker.
+Dockerfile, extensions, and instructions on how to deploy an image to run Armadillo2 simulation via docker.
 
 ## Install docker
 Follow the instructions [here](https://docs.docker.com/engine/install/ubuntu/) (those instruction are for Ubnutu OS).
@@ -7,12 +7,12 @@ It is recommended to manage Docker as a non-root user you can follow [this](http
  
 
 ### Prerequisties
-Install nvidia driver and CUDA. If you would like to work with deep learning as well you shuold install cudnn as well (e.g. using YOLO, real-time object detection).
-You may uses [these](https://github.com/TalFeiner/bash_tools) scripts to install nvidia driver, CUDA and cudnn.
+Install Nvidia driver and CUDA. If you would like to work with deep learning as well you should install cudnn as well (e.g. using YOLO, real-time object detection).
+You may use [these](https://github.com/TalFeiner/bash_tools) scripts to install Nvidia driver, CUDA and cudnn.
 
 To run GPU accelerated containers we need to install the NVIDIA Container ToolKit installation guide can be found [here](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installing-on-ubuntu-and-debian).
 
-## Donwload Armadillo2 packeges
+## Download Armadillo2 packages
 The require packeges to deploy the simulation are: 
 1. [armadillo2](https://github.com/bguplp/armadillo).
 2. [robotican demos upgrade](https://github.com/bguplp/robotican_demos_upgrade).
@@ -20,7 +20,7 @@ The require packeges to deploy the simulation are:
 4. [gazebo models](https://github.com/robotican/gazebo_models.git).
 5. [armadillo navigation upgrade](https://github.com/bguplp/armadillo_navigation_upgrade)
 
-**Note** that repositories 1,2 are private, in order to use `git clone` command you need to connect through an ssh connection. 
+**Note** that repositories 1,2 are private, in order to use `git clone` command you need to connect through an SSH connection. 
 
 You can clone the repositories with
 ```bash
@@ -34,7 +34,7 @@ cd armadillo2_ws/docker_src
 # This clone is made through an ssh connection.
 git clone git@github.com:bguplp/robotican_demos_upgrade.git
 ```
-After you download all the packges, download the Dockerfile,
+After you download all the packages, download the Dockerfile,
 ```bash
 cd ~/armadillo2_ws/docker_src 
 # If needed change the path to your's repositories directory.
@@ -50,7 +50,7 @@ wget https://github.com/bguplp/Armadillo2-Docker/raw/main/armadillo2_control_gaz
 ```bash
 cd <path>/<to>/docker_src
 ```
-2. Ensure that the host CUDA version and the docker base image are correlated. Verifty the HOST version with, 
+2. Ensure that the host CUDA version and the docker base image are correlated. Verify the HOST version with, 
 ```bash
 cat /usr/local/cuda/version.txt
 ```
@@ -65,20 +65,20 @@ You may find your specific version [here](https://hub.docker.com/r/nvidia/cudagl
 ```bash
 docker build -t armadillo2 . 
 ```
-`armadillo2` is the image's name, the `-t` flag tags our image. And the `.` at the end, tells that Docker should look for the `Dockerfile` in the current directory. This would take a few minutes. We can verifty is succesed with vscode (through docker extension) or with `docker images`
+`armadillo2` is the image's name, the `-t` flag tags our image. And the `.` at the end, tells that Docker should look for the `Dockerfile` in the current directory. This would take a few minutes. We can verify it succeed with vscode (through docker extension) or with `docker images` command,
 
 ![alt text](https://github.com/bguplp/Armadillo2-Docker/blob/main/images/images_list.png)
 
-Now we ready for the next step, installation and compilation of armadillo2 simulation.
+Now we are ready for the next step, installation and compilation of armadillo2 simulation.
 
 ## Setup and compile armadillo
 
-Download the script for running a container, this script run a container with the essential arguments.
+Download the script for running a container, this script runs a container with the essential arguments.
 ```bash 
 wget https://github.com/bguplp/Armadillo2-Docker/raw/main/run_container.bash
 chmod +x run_container.bash 
 ```
-If you set the image different name then `armadillo2` you can pass an argument for this script with the image name,
+If you set the image different name than `armadillo2` you can pass an argument for this script with the image name,
 ```bash 
 sudo ./run_container.bash <image_tag>
 ```
@@ -94,23 +94,23 @@ The absolute path is `/home/ros/catkin_ws/src/armadillo/armadillo2`. Run the set
 ```
 This would take some time...
 
-After the setup is done, we commiting to the image **This execute within a host terminal**,
+After the setup is done, we will commit to the image. **This execute within a host terminal**,
 ```bash
 docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
 ```
-To find out your CONTAINER ID, run `docker ps`. Either use autocomplete (Tab key) to use the container name. The repository may be again armadillo2. Example for a commit command,
+To find out your CONTAINER ID, run `docker ps`. Either use autocomplete (Tab key) to use the container name. The repository may be again armadillo2. For example, a commit command,
 ```bash
 docker commit xenodochial_varahamihira armadillo2
 ```
 
-Now let's setup our environment by source `.bashrc`,
+Now let's set up our environment by source `.bashrc`,
 ```bash
 source ~/.bashrc
 ```
 
 ## Run container with armadillo
 
-After you build the image, setup armadillo2 within the container and commit, you able to run a container. Now we will demonstrate how to runs a container, inside the container we will implement simulation, launch a file and excute pick operation. 
+After you build the image, setup armadillo2 within the container and committed, you can run a container. Now we will demonstrate how to run a container, inside the container we will implement simulation, launch a file and execute pick operation. 
 
 1. Run a container,
 ```bash 
@@ -124,9 +124,9 @@ roslaunch armadillo2 armadillo2.launch gazebo:=true kinect:=true world_name:="`r
 ```bash
 docker exec -it <container_name> bash
 ```
-This step will redo every time when we need a new terminal.
+This step will be redone whenever we need a new terminal.
 
-4. (recommend) Inside the container running a `rqt`, to navigates and monitoring the robot.
+4. (recommend) Inside the container, or in the host, to run an `rqt`, to navigate and monitor the robot output.
 
 5. Launch the script for pickup,
 ```bash
@@ -146,7 +146,7 @@ The final result,
 ![alt text](https://github.com/bguplp/Armadillo2-Docker/blob/main/images/pickup-based-color.png)
 
 ### Update the current container
-If you done some changes inside the container, and you would like to updates the image you can run
+If you did some changes inside the container, and you would like to updates the image you can run
 ```bash
 docker commit <container_name> <image_name>
 ```
@@ -158,16 +158,18 @@ Alternative
 ```bash
 docker container ls
 ```
-The `image_name` is your own preference if you like to rewrite the image use the same name, you can also add tag by `<image_name>:<tag>`.
+The `image_name` is your preference if you like to rewrite the image use the same name, you can also add a tag by `<image_name>:<tag>`.
+
 ## Host container communication
 
-While I used ROS noetic within the host machine it work fine, I manage to run simulation in a container, YOLO-4 on the host machine and pick-up services and launch inside the container, so I can say it can comunicate and transfer data, without additional configuration.
+While I used ROS noetic within the host machine it work fine, I manage to run a simulation in a container, YOLO-4 on the host machine, and pick-up services and launch inside the container, so I can say it can communicate and transfer data, without additional configuration.
 
-## Trobleshooting
-There is a few, I didn't managed to documents a lot so you may try google search or contact me via email [orelhamamy@gamil.com](mailto:orelhamamy@gamil.com?subject=[github]%20Armadillo2%20Docker).
+## Troubleshooting
+There are a few, I didn't manage to document a lot so you may try to search in google or contact me via email [orelhamamy@gamil.com](mailto:orelhamamy@gamil.com?subject=[github]%20Armadillo2%20Docker).
+
 ### Low Disk Space on "Filesystem root"
 
-The docker storges data in `/var/lib/docker/` directory, which may cause consuming of a lot of space. There are two possibale solutions,
+The docker storage data in `/var/lib/docker/` directory, that may be consuming a lot of space. There are two possible solutions,
  1. Delete previous data like old containers and etc. 
 ```bash
 docker system prune 
