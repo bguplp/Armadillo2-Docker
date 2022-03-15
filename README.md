@@ -170,32 +170,32 @@ There are a few, I didn't manage to document a lot so you may try to search in g
 ### Low Disk Space on "Filesystem root"
 
 The docker storage data in `/var/lib/docker/` directory, that may be consuming a lot of space. There are two possible solutions,
- 1. Delete previous data like old containers and etc. 
+1. Delete previous data like old containers and etc. 
 ```bash
 docker system prune 
 ```
 **NOTICE** You may add -a flag, be aware this command can delete your images as well.
 
- 2. Change to docker data directory from `/root` to `/home`. For more detail see this [link](https://www.ibm.com/docs/en/z-logdata-analytics/5.1.0?topic=compose-relocating-docker-root-directory).
+2. Change to docker data directory from `/root` to `/home`. For more detail see this [link](https://www.ibm.com/docs/en/z-logdata-analytics/5.1.0?topic=compose-relocating-docker-root-directory).
 
-	2.1 Stop the Docker service,
+   2.1 Stop the Docker service,
 ```bash
 sudo systemctl stop docker
 sudo systemctl stop docker.socket
 sudo systemctl stop containerd
 ```
 	
-2.2 Create new dir for the docker,
+   2.2 Create new dir for the docker,
 ```bash
 sudo mkdir -p /new_dir_structure
 ```
 	
-	2.3 Move Docker root to the new dir,
+   2.3 Move Docker root to the new dir,
 ```bash
 sudo mv /var/lib/docker /new_dir_structure
 ```
 	
-	2.4 Edit (with root privilege) the file `/etc/docker/daemon.json`. If you installed Nvidia-Docker 2.0 the file should be existed, edit it as follow,
+   2.4 Edit (with root privilege) the file `/etc/docker/daemon.json`. If you installed Nvidia-Docker 2.0 the file should be existed, edit it as follow,
 ```JSON
 {
     "runtimes": {
@@ -208,7 +208,7 @@ sudo mv /var/lib/docker /new_dir_structure
 }
 ```
 	
-	2.5 Restart the Docker services, 
+   2.5 Restart the Docker services, 
 ```bash
 sudo systemctl start docker
 ```
