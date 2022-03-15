@@ -179,7 +179,6 @@ docker system prune
 2. Change to docker data directory from `/root` to `/home`. For more detail see this [link](https://www.ibm.com/docs/en/z-logdata-analytics/5.1.0?topic=compose-relocating-docker-root-directory).
 
    2.1. Stop the Docker service,
-        
 	```bash
 	sudo systemctl stop docker
 	sudo systemctl stop docker.socket
