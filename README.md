@@ -179,36 +179,36 @@ docker system prune
 2. Change to docker data directory from `/root` to `/home`. For more detail see this [link](https://www.ibm.com/docs/en/z-logdata-analytics/5.1.0?topic=compose-relocating-docker-root-directory).
 
    2.1. Stop the Docker service,
-      ```bash
-      sudo systemctl stop docker
-      sudo systemctl stop docker.socket
-      sudo systemctl stop containerd
-      ```
+        ```bash
+        sudo systemctl stop docker
+        sudo systemctl stop docker.socket
+        sudo systemctl stop containerd
+        ```
 	
-   2.2 Create new dir for the docker,
-   ```bash
-sudo mkdir -p /new_dir_structure
-   ```
+   2.2. Create new dir for the docker,
+        ```bash
+        sudo mkdir -p /new_dir_structure
+        ```
 	
-   2.3 Move Docker root to the new dir,
-```bash
-sudo mv /var/lib/docker /new_dir_structure
-```
+   2.3. Move Docker root to the new dir,
+        ```bash
+        sudo mv /var/lib/docker /new_dir_structure
+        ```
 	
-   2.4 Edit (with root privilege) the file `/etc/docker/daemon.json`. If you installed Nvidia-Docker 2.0 the file should be existed, edit it as follow,
-```JSON
-{
-    "runtimes": {
-        "nvidia": {
-            "path": "nvidia-container-runtime",
-            "runtimeArgs": []
-        }
-    },
-    "data-root": "/<path>/<to>/<your>/<directory>"
-}
-```
+   2.4. Edit (with root privilege) the file `/etc/docker/daemon.json`. If you installed Nvidia-Docker 2.0 the file should be existed, edit it as follow,
+        ```JSON
+	{
+	    "runtimes": {
+		"nvidia": {
+		    "path": "nvidia-container-runtime",
+		    "runtimeArgs": []
+		}
+	    },
+	    "data-root": "/<path>/<to>/<your>/<directory>"
+	}
+        ```
 	
-   2.5 Restart the Docker services, 
-```bash
-sudo systemctl start docker
-```
+   2.5. Restart the Docker services, 
+        ```bash
+        sudo systemctl start docker
+        ```
