@@ -19,6 +19,7 @@ The require packeges to deploy the simulation are:
 3. [gazebo worlds](https://github.com/bguplp/gazebo_worlds).
 4. [gazebo models](https://github.com/robotican/gazebo_models.git).
 5. [armadillo navigation upgrade](https://github.com/bguplp/armadillo_navigation_upgrade)
+6. [obj_detector](https://github.com/bguplp/obj_detector)
 
 **Note** that repositories 1,2 are private, in order to use `git clone` command you need to connect through an SSH connection. 
 
