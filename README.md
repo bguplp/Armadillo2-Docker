@@ -62,6 +62,9 @@ For example,
 We would like to use 11.0.* now let's updates the FROM image by changing line 9 from `FROM nvidia/cudagl:11.2.2-base-ubuntu16.04` to `FROM nvidia/cudagl:11.0.3-base-ubuntu16.04`
 
 You may find your specific version [here](https://hub.docker.com/r/nvidia/cudagl/tags).
+Tested with 11.0.3-base-ubuntu16.04 (DRS: testing with 11.0.3-base-ubuntu16.04)
+
+
 3. build the image:
 ```bash
 docker build -t armadillo2 . 
